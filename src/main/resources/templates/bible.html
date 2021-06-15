@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body onload="loadBookNames()">
+
+	<script type="text/javascript">
+	
+	function loadBookNames(){
+		
+		fetch('http://localhost:8080/books')
+		.then( response => {
+			return response.json();
+		})
+		.then( books => {
+			var sel = document.getElementById('book_names_id');
+			sel.appendChild(createOption("", ""));
+			for (const book of books){
+				sel.appendChild(createOption(book.id, book.bookName));
+			}
+			
+		});
+	}
+	
+	function createOption(id, bookName){
+		var opt = document.createElement('option');
+		opt.appendChild(document.createTextNode(bookName));
+		opt.value = id; 
+		return opt;
+
+	}
+	
+	
+		function loadBookByBookNameId() {
+			
+	  		var id = document.getElementById('book_names_id').value;
+	  		
+	  		fetch('http://localhost:8080/books/' + id)
+	  		
+			.then( response => {
+				
+				return response.json();
+				
+			})
+			
+			.then( verses => {
+				
+				var verseDiv = document.getElementById("div_verse");
+				var table = document.createElement("TABLE");
+				verseDiv.appendChild(table);
+				
+				for(const verse of verses){
+					
+					var tr = document.createElement("TR");
+					table.appendChild(tr);
+					
+					var td1 = document.createElement("td");
+					
+					var td2 = document.createElement("td");
+					
+					tr.appendChild(td1);
+					tr.appendChild(td2);
+					
+					var text1 = document.createTextNode(verse.verseNumber);
+					var text2 = document.createTextNode(verse.verse);
+					
+					td1.appendChild(text1);
+					td2.appendChild(text2);
+					  
+					  
+				}
+			
+			});
+	  		
+	  		
+		}
+	</script>
+
+	<label for="book_names">Choose a Book:</label>
+	
+	<select name="book_names" id="book_names_id"
+		onChange="loadBookByBookNameId()">
+	</select>
+	
+	
+	
+	<div id="div_verse">
+	
+	
+	</div>
+	
+	
+
+</body>
+</html>
